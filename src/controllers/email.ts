@@ -31,8 +31,11 @@ export const sendEmail = async (req: Request, res: Response) => {
 
     if (!errors.isEmpty()) {
         // req.flash("errors", errors.array());
-        return res.redirect("/contact");
+        return res.redirect("/error");
+        // return res.send(errors);
     }
+
+// sending email is slow, it should apply async/await
 
     const mailOptions = {
         to: "KevinPingWu@gmail.com",

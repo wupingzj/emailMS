@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import fs from "fs";
 
 import * as homeController from "./controllers/home";
+import * as errorController from "./controllers/error";
 import * as emailController from "./controllers/email";
 
 // load configuration
@@ -28,6 +29,7 @@ app.use(flash());
  * Primary app routes.
  */
 app.get("/", homeController.index);
+app.get("/error", errorController.handleError);
 app.post("/v1/emails", emailController.sendEmail);
 app.get("/v1/emails/:id", emailController.getEmailStatus);
 app.delete("/v1/emails/:id", emailController.deleteEmail);
