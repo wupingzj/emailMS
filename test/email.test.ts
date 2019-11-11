@@ -23,3 +23,10 @@ describe("GET /v1/emails/1", () => {
 
 //     });
 // });
+
+describe("DELETE /v1/emails/1", () => {
+    it("should return 200 OK", (done) => {
+        request(app).delete("/v1/emails/1")
+            .expect(200, done);
+    });
+});
