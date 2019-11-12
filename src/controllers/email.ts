@@ -29,7 +29,8 @@ export const getEmailStatus = async (req: Request, res: Response) => {
         // email id is not valid
         logger.debug("Email ID is not provided: " + emailId);
 
-        const result = { id: emailId, status: "Expected behaviour not defined in code challenge specification" };
+        // Expected behaviour not defined in code challenge specification
+        const result = { id: emailId, status: "invalid email ID" };
         return res.json(result);
     }
 
@@ -38,11 +39,12 @@ export const getEmailStatus = async (req: Request, res: Response) => {
         // email not found in database
         logger.debug("Email not found: " + emailId);
 
-        const result = { id: emailId, status: "Expected behaviour not defined in code challenge specification"};
+        const result = { id: emailId, status: "Email not found in database."};
         return res.json(result);
     } else {
         // email found, delete it
         const status = emailBody.status;
+        console.log("The status of email " + emailId + " status=" + status);
 
         const result = { id: emailId, status: emailBody.status };
         return res.json(result);
@@ -75,7 +77,7 @@ export const sendEmail = async (req: Request, res: Response) => {
 
         // put into queue
         mailInQueue.status = "FAILED";
-        emailsInMemory.put(emailId, req.body);
+        emailsInMemory.put(emailId, mailInQueue);
 
         const result = { id: emailId, status: "FAILED" };
         return res.json(result);
@@ -94,7 +96,7 @@ export const sendEmail = async (req: Request, res: Response) => {
 
             // put into queue
             mailInQueue.status = "QUEUED";
-            emailsInMemory.put(emailId, req.body);
+            emailsInMemory.put(emailId, mailInQueue);
 
             const result = { id: emailId, status: "QUEUED" };
             return res.json(result);
@@ -102,7 +104,7 @@ export const sendEmail = async (req: Request, res: Response) => {
 
         // put into queue
         mailInQueue.status = "SENT";
-        emailsInMemory.put(emailId, req.body);
+        emailsInMemory.put(emailId, mailInQueue);
 
         logger.debug("Email is successfully sent and put into queue with email id: " + emailId);
         const result = { id: emailId, status: "SENT" };
