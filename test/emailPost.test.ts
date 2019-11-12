@@ -28,7 +28,7 @@ describe("POST /v1/emails", () => {
 });
 
 describe("POST /v1/emails", () => {
-    it("should return res.body.errors and FAILED status when incomplete message is posted", (done) => {
+    it("should return FAILED status when incomplete message is posted", (done) => {
         const res = request(app).post("/v1/emails")
             .set("Accept", "application/json")
             .send({
@@ -39,8 +39,6 @@ describe("POST /v1/emails", () => {
             .end(function (err, res) {
                 expect(err).to.be.null;
                 expect(res.error).to.be.false;
-                // expect(res.body.errors).not.to.be.undefined;
-                // expect(res.body.id).to.be.undefined;
                 assert.isAtLeast(36, 14, res.body.id.length);
                 assert.match(res.body.status, /FAILED/);
 
