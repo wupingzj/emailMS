@@ -2,13 +2,6 @@ import request from "supertest";
 import app from "../src/app";
 import { expect, assert } from "chai";
 
-describe("GET /v1/emails/1", () => {
-    it("should return 200 OK", (done) => {
-        request(app).get("/v1/emails/1")
-            .expect(200, done);
-    });
-});
-
 describe("POST /v1/emails", () => {
     it("should pass with either SENT or QUEUED from assert when complete message is posted", (done) => {
         const res = request(app).post("/v1/emails")
@@ -53,12 +46,5 @@ describe("POST /v1/emails", () => {
                 done();
             })
             .expect(200);
-    });
-});
-
-describe("DELETE /v1/emails/1", () => {
-    it("should return 200 OK", (done) => {
-        request(app).delete("/v1/emails/1")
-            .expect(200, done);
     });
 });
