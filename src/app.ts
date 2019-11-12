@@ -1,6 +1,7 @@
 
 import express from "express";
 import flash from "express-flash";
+import bodyParser from "body-parser";
 import path from "path";
 import logger from "./util/logger";
 import dotenv from "dotenv";
@@ -24,6 +25,8 @@ const app = express();
 
 app.set("port", process.env.PORT || 3000);
 app.use(flash());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 /**
  * Primary app routes.
@@ -34,4 +37,10 @@ app.post("/v1/emails", emailController.sendEmail);
 app.get("/v1/emails/:id", emailController.getEmailStatus);
 app.delete("/v1/emails/:id", emailController.deleteEmail);
 
+
+process.on("unhandledRejection", error => {
+    // Will print "unhandledRejection err is not defined"
+    console.log("unhandledRejection");
+  });
+  
 export default app;

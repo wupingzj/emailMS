@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../src/app";
-import { expect} from "chai";
+import { expect } from "chai";
 
 describe("GET /v1/emails/1", () => {
     it("should return 200 OK", (done) => {
@@ -9,20 +9,44 @@ describe("GET /v1/emails/1", () => {
     });
 });
 
+describe("POST /v1/emails", () => {
+    it("should pass from assert when complete message is posted", (done) => {
+        const res = request(app).post("/v1/emails")
+            .set("Accept", "application/json")
+            .send({
+                "to": "KPW@gmail.com",
+                "content": "You are awesome!",
+                "subject": "awesome!"
+            })
+            .expect("Content-Type", /json/)
+            .end(function (err, res) {
+                expect(err).to.be.null;
+                expect(res.error).to.be.false;
+                expect(res.body.errors).to.be.undefined;
+                done();
+            })
+            .expect(200);
+    });
+});
 
-// describe("POST /contact", () => {
-//     it("should return false from assert when no message is found", (done) => {
-//         request(app).post("/contact")
-//             .field("name", "John Doe")
-//             .field("email", "john@me.com")
-//             .end(function(err, res) {
-//                 expect(res.error).to.be.false;
-//                 done();
-//             })
-//             .expect(302);
-
-//     });
-// });
+describe("POST /v1/emails", () => {
+    it("should return res.body.errors when incomplete message is posted", (done) => {
+        const res = request(app).post("/v1/emails")
+            .set("Accept", "application/json")
+            .send({
+                "content": "You are awesome!",
+                "subject": "awesome!"
+            })
+            .expect("Content-Type", /json/)
+            .end(function (err, res) {
+                expect(err).to.be.null;
+                expect(res.error).to.be.false;
+                expect(res.body.errors).not.to.be.undefined;
+                done();
+            })
+            .expect(200);
+    });
+});
 
 describe("DELETE /v1/emails/1", () => {
     it("should return 200 OK", (done) => {
