@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../src/app";
-import { expect } from "chai";
+import { expect, assert } from "chai";
 
 describe("GET /v1/emails/1", () => {
     it("should return 200 OK", (done) => {
@@ -23,6 +23,10 @@ describe("POST /v1/emails", () => {
                 expect(err).to.be.null;
                 expect(res.error).to.be.false;
                 expect(res.body.errors).to.be.undefined;
+
+                expect(res.body.id).to.have.length(24);
+                assert.match(res.body.status, /SENT | QUEUED | FAILED/, "email status must be either SENT or QUEUED or FAILED");
+
                 done();
             })
             .expect(200);

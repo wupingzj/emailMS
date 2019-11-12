@@ -23,25 +23,28 @@ export const getEmailStatus = (req: Request, res: Response) => {
  * Send an email via Nodemailer.
  */
 export const sendEmail = async (req: Request, res: Response) => {
-    await check("name", "Name cannot be blank").not().isEmpty().run(req);
-    await check("email", "Email is not valid").isEmail().run(req);
-    await check("message", "Message cannot be blank").not().isEmpty().run(req);
+    await check("subject", "Name cannot be blank").not().isEmpty().run(req);
+    await check("to", "Email is not valid").isEmail().run(req);
+    await check("content", "Message cannot be blank").not().isEmpty().run(req);
 
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
+        res.setHeader("Content-Type", "application/json");
+
+        return res.end(JSON.stringify(errors));
+
+        // flash requires session. We don't want over engineer just for now
         // req.flash("errors", errors.array());
-        return res.redirect("/error");
-        // return res.send(errors);
+        // return res.redirect("/error");
     }
 
-// sending email is slow, it should apply async/await
+    // sending email is slow, it should apply async/await
 
     const mailOptions = {
-        to: "KevinPingWu@gmail.com",
-        from: `${req.body.name} <${req.body.email}>`,
-        subject: "Email Form",
-        text: req.body.message
+        to: `${req.body.to}`,
+        subject: `${req.body.subject}`,
+        text: `${req.body.content}`
     };
 
     // transporter.sendMail(mailOptions, (err) => {
@@ -52,6 +55,8 @@ export const sendEmail = async (req: Request, res: Response) => {
     //     // req.flash("success", { msg: "Email has been sent successfully!" });
     //     res.redirect("/contact");
     // });
+
+    return res.json("It is done");
 };
 
 
