@@ -19,8 +19,34 @@ const transporter = nodemailer.createTransport({
  * GET
  * Get email status
  */
-export const getEmailStatus = (req: Request, res: Response) => {
-    res.send("TO DO: get email status");
+export const getEmailStatus = async (req: Request, res: Response) => {
+    const emailId = req.params.id;
+
+    await check("id", "ID cannot be blank").not().isEmpty().run(req);
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        // email id is not valid
+        logger.debug("Email ID is not provided: " + emailId);
+
+        const result = { id: emailId, status: "Expected behaviour not defined in code challenge specification" };
+        return res.json(result);
+    }
+
+    const emailBody = emailsInMemory.get(emailId);
+    if (!emailBody) {
+        // email not found in database
+        logger.debug("Email not found: " + emailId);
+
+        const result = { id: emailId, status: "Expected behaviour not defined in code challenge specification"};
+        return res.json(result);
+    } else {
+        // email found, delete it
+        const status = emailBody.status;
+
+        const result = { id: emailId, status: emailBody.status };
+        return res.json(result);
+    }
 };
 
 /**
@@ -119,4 +145,3 @@ export const deleteEmail = async (req: Request, res: Response) => {
     }
 };
 
-// sending email is slow, it should apply async/await

@@ -22,7 +22,8 @@
             "runtimeArgs": [
                 "--inspect-brk",
                 "${workspaceRoot}/node_modules/jest/bin/jest.js",
-                "--runInBand"
+                "--runInBand",
+                "emailGET.test"
             ],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen",
