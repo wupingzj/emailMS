@@ -39,9 +39,10 @@ describe("POST /v1/emails", () => {
             .end(function (err, res) {
                 expect(err).to.be.null;
                 expect(res.error).to.be.false;
-                expect(res.body.errors).not.to.be.undefined;
-
-                expect(res.body.id).to.be.undefined;
+                // expect(res.body.errors).not.to.be.undefined;
+                // expect(res.body.id).to.be.undefined;
+                assert.isAtLeast(36, 14, res.body.id.length);
+                assert.match(res.body.status, /FAILED/);
 
                 done();
             })

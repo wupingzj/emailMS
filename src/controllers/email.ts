@@ -38,16 +38,15 @@ export const sendEmail = async (req: Request, res: Response) => {
 
         // put into queue - TODO
         const result = { id: emailId, status: "FAILED" };
-
         res.setHeader("Content-Type", "application/json");
-        return res.end(JSON.stringify(errors));
+        // As per the requirement, we return id and FAILED instead of the reason for failure.
+        // return res.end(JSON.stringify(errors));
+        return res.json(result);
     }
-
-    // sending email is slow, it should apply async/await
 
     const mailOptions = {
         to: `${req.body.to}`,
-        from: "KevinPingWuTest@gmail.com",
+        from: "KevinPingWu@gmail.com",
         subject: `${req.body.subject}`,
         text: `${req.body.content}`
     };
@@ -75,3 +74,5 @@ export const sendEmail = async (req: Request, res: Response) => {
 export const deleteEmail = (req: Request, res: Response) => {
     res.send("TO DO: delete email ");
 };
+
+// sending email is slow, it should apply async/await
