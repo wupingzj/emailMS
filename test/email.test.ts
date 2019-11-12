@@ -10,7 +10,7 @@ describe("GET /v1/emails/1", () => {
 });
 
 describe("POST /v1/emails", () => {
-    it("should pass from assert when complete message is posted", (done) => {
+    it("should pass with either SENT or QUEUED from assert when complete message is posted", (done) => {
         const res = request(app).post("/v1/emails")
             .set("Accept", "application/json")
             .send({
@@ -24,8 +24,9 @@ describe("POST /v1/emails", () => {
                 expect(res.error).to.be.false;
                 expect(res.body.errors).to.be.undefined;
 
-                expect(res.body.id).to.have.length(24);
-                assert.match(res.body.status, /SENT | QUEUED | FAILED/, "email status must be either SENT or QUEUED or FAILED");
+                // The length of email unique id is at least 14
+                assert.isAtLeast(36, 14, res.body.id.length);
+                assert.match(res.body.status, /SENT|QUEUED/);
 
                 done();
             })
@@ -34,7 +35,7 @@ describe("POST /v1/emails", () => {
 });
 
 describe("POST /v1/emails", () => {
-    it("should return res.body.errors when incomplete message is posted", (done) => {
+    it("should return res.body.errors and FAILED status when incomplete message is posted", (done) => {
         const res = request(app).post("/v1/emails")
             .set("Accept", "application/json")
             .send({
@@ -46,6 +47,9 @@ describe("POST /v1/emails", () => {
                 expect(err).to.be.null;
                 expect(res.error).to.be.false;
                 expect(res.body.errors).not.to.be.undefined;
+
+                expect(res.body.id).to.be.undefined;
+
                 done();
             })
             .expect(200);
