@@ -32,14 +32,14 @@ npm run build
 - Test
 
 ```
-ng test
+npm test
 
 ```
 
 - Run
 
 ```
-ng start
+npm start
 ```
 
 The server will automatically launch at http://localhost:2010/.
